@@ -303,32 +303,19 @@ main() {
   clone_neovim
   require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
   cd "${NEOVIM_DIR}"
-  stable_commit=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse stable^{commit})
   # The current vX.Y.Z tag identified by the `stable` tag.
   stable_semantic_tag=$(git tag --points-at stable | grep 'v[0-9].*')
-  commits_since_stable=$(git_commits_since_tag stable "$NEOVIM_BRANCH")
 
   log_info "stable_semantic_tag=${stable_semantic_tag}"
 
   #
-  # Update the "stable" release if needed, else update "nightly".
+  # only build nightly
   #
-  if test "$commits_since_stable" -lt 4 \
-      || ! is_release_current "$stable_semantic_tag" \
-      || ! is_release_current stable ; then
-    log_info "building: stable"
-    build_nightly stable
-    # Push assets to the stable tag.
-    try_update_nightly stable "$stable_commit" "tag=${stable_semantic_tag}"
-    # Push assets to the current vX.Y.Z tag.  https://github.com/neovim/neovim/issues/10011
-    try_update_nightly "$stable_semantic_tag" "$stable_commit" "tag=${stable_semantic_tag}"
-  else
-    log_info "building: nightly"
-    # Don't check. Need different builds for same commit.
-    # is_tag_pointing_to nightly "$NEOVIM_COMMIT" ||
-    build_nightly "$NEOVIM_BRANCH"
-    try_update_nightly nightly "$NEOVIM_COMMIT" "branch=${NEOVIM_BRANCH}"
-  fi
+  log_info "building: nightly"
+  # Don't check. Need different builds for same commit.
+  # is_tag_pointing_to nightly "$NEOVIM_COMMIT" ||
+  build_nightly "$NEOVIM_BRANCH"
+  try_update_nightly nightly "$NEOVIM_COMMIT" "branch=${NEOVIM_BRANCH}"
 }
 
 main
