@@ -14,41 +14,10 @@ env:
     - secure: pgI3Qt7bCRDeuKX38hP9xTJ6CdbwoUkcPToHnfDFYeclhUJRgCfZhCKKO+zTwqoa2Jx7wShoFeHaKidOFctg4ls4lrn47b0bPFED3LtU7RDQaeamqFKzgTV1IcEpkUfGl/i8tOmaEd7UvyUHKuKZmjmVr4Ce4ugATShYB186EW0=
 matrix:
   include:
-    - env: CI_TARGET=assign-labels
-    - env: CI_TARGET=auto-pullrequest
-    - env: CI_TARGET=deps-src
-    - env: CI_TARGET=doc-index
-    - env: CI_TARGET=doxygen
-      addons:
-        apt:
-          packages:
-            - doxygen
-    - env: CI_TARGET=sync-mirrors
-    - env: CI_TARGET=sync-lp-mirrors
-    - env: CI_TARGET=user-docu
-    - env: CI_TARGET=vimpatch-report
-      addons:
-        apt:
-          packages:
-            - python3
-            - python3-requests
-    - env: CI_TARGET=clint-errors
-    - os: linux
-      env: CI_TARGET=pvs-report
-      compiler: clang
-    - os: linux
-      env: CI_TARGET=clang-report SCAN_BUILD=scan-build
-      compiler: clang
     - os: osx
       osx_image: xcode10.1
       env: CI_TARGET=nightly
       compiler: clang
-    - env: CI_TARGET=nightly
-#    - os: linux
-#      env: CI_TARGET=coverity
-#  allow_failures:
-#    - os: linux
-#      env: CI_TARGET=coverity
 install:
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew install bash;
